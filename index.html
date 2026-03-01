@@ -164,7 +164,7 @@
 
                         <!-- Lucky Number Result -->
                         <div class="text-center px-5 md:px-8 pb-2">
-                            <p class="text-slate-400 text-sm md:text-base mb-0">ผลรวมมงคลคือ</p>
+                            <p class="text-slate-400 text-sm md:text-base mb-0">ผลรวมเลขมงคลคือ</p>
                             <div id="resultDigit"
                                 class="text-[7rem] md:text-[10rem] font-black leading-none gold-text my-1 md:my-2 italic">
                                 ?</div>
@@ -230,7 +230,7 @@
                             class="flex-1 bg-[#06C755] hover:bg-[#05b34c] text-white py-4 md:py-5 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl flex items-center justify-center gap-2 md:gap-3 transition-all active:scale-95">
                             <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
                                 <path
-                                    d="M19.365 9.863c.064.433.1.883.1 1.345 0 3.351-3.429 6.068-7.658 6.068-4.229 0-7.658-2.717-7.658-6.068s3.429-6.068 7.658-6.068c.813 0 1.589.1 2.304.285l-.048-.028c1.36-.54 2.618-1.037 3.513-1.258.118-.028.232-.054.341-.077.295-.062.532.148.473.43l-.337 1.574s-.27 1.259-.395 1.828c-.015.068-.027.13-.035.185l.048-.018zM9.3 12.784c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35V11.2h.5c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-1.1c-.193 0-.35.157-.35.35v1.584h-.5c-.193 0-.35.157-.35.35v1.1zm3.85 0c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35v-3.134c0-.193-.157-.35-.35-.35h-1.1c-.193 0-.35.157-.35.35v3.134zm3.85 0c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35v-1.584h1.1c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-2.2c-.193 0-.35.157-.35.35v3.134zm-9.35 0c0 .193.157.35.35.35h2.2c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-1.1v-.534h1.1c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-2.2c-.193 0-.35.157-.35.35v3.134z" />
+                                    d="M12 2C6.48 2 2 5.64 2 10.14c0 4.02 3.56 7.39 8.37 8.03.33.07.77.22.88.5.1.26.07.66.03.92l-.14.87c-.04.26-.2 1.01.88.55.94-.41 5.09-3 6.94-5.14C20.84 13.74 22 12.04 22 10.14 22 5.64 17.52 2 12 2z" />
                             </svg>
                             LINE
                         </button>
@@ -347,15 +347,21 @@
             const url = encodeURIComponent(SITE_URL);
             const digit = document.getElementById('resultDigit').innerText;
             const house = document.getElementById('resultHouseNumber').innerText;
-            const text = encodeURIComponent(`บ้านเลขที่ ${house} ของฉัน ผลรวมมงคลคือเลข ${digit} ✨ มาลองคำนวณบ้านคุณบ้าง!`);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+            const text = encodeURIComponent(`บ้านเลขที่ ${house} ของฉัน ผลรวมเลขมงคลคือเลข ${digit} ✨ มาลองคำนวณบ้านคุณบ้าง!`);
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
+            // Use link navigation instead of window.open to avoid iOS Safari popup blocker
+            const a = document.createElement('a');
+            a.href = shareUrl;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.click();
         }
 
         function shareLine() {
             const url = encodeURIComponent(SITE_URL);
             const digit = document.getElementById('resultDigit').innerText;
             const house = document.getElementById('resultHouseNumber').innerText;
-            const text = encodeURIComponent(`🏠 บ้านเลขที่ ${house} ผลรวมมงคลคือเลข ${digit} ✨\nมาลองคำนวณบ้านคุณบ้าง!`);
+            const text = encodeURIComponent(`🏠 บ้านเลขที่ ${house} ผลรวมเลขมงคลคือเลข ${digit} ✨\nมาลองคำนวณบ้านคุณบ้าง!`);
             window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${text}`, '_blank');
         }
 
