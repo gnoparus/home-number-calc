@@ -317,6 +317,14 @@
             document.getElementById('resultDigit').innerText = currentSum;
             document.getElementById('resultDesc').innerText = meanings[currentSum] || "เป็นเลขที่มีพลังงานบวกมหาศาล";
 
+            // Track calculation event in GTM
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'calculate_result',
+                'lucky_digit': currentSum,
+                'house_number': input
+            });
+
             // Show website URL text
             const displayUrl = SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
             document.getElementById('siteUrlDisplay').innerText = displayUrl;
