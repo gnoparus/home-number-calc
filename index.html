@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศาสตร์พลังตัวเลข - บ้านเลขที่มงคล</title>
+    <meta name="description" content="คำนวณเลขมงคลจากบ้านเลขที่ของคุณ วิเคราะห์ตามศาสตร์พลังตัวเลข">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .gold-border {
+            border: 2px solid;
+            border-image: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c) 1;
+        }
+        .gold-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #d4af37;
+        }
+        .card-shadow {
+            box-shadow: 0 0 50px rgba(191, 149, 63, 0.15);
+        }
+        .step-animation {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center p-4 md:p-10">
+    
+    <div class="w-full max-w-2xl bg-[#1e293b] rounded-[3rem] overflow-hidden card-shadow border border-slate-700">
+        <!-- Header -->
+        <div class="p-10 text-center border-b border-slate-700 bg-slate-800/50">
+            <h1 class="text-4xl md:text-5xl font-black mb-4 gold-text">ศาสตร์พลังตัวเลข</h1>
+            <p class="text-xl md:text-2xl text-slate-300 font-light">วิเคราะห์บ้านเลขที่มงคล</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="p-8 md:p-12">
+            <div class="mb-10 text-center">
+                <label for="houseNumber" class="block text-slate-400 text-xl mb-4 font-medium italic">กรอกเลขที่บ้านของคุณ</label>
+                <input type="text" id="houseNumber" 
+                    placeholder="เช่น 123/45 หรือ 99" 
+                    class="w-full text-4xl md:text-5xl font-bold px-4 py-6 rounded-2xl bg-slate-900 border-2 border-slate-700 text-yellow-400 text-center focus:border-yellow-500 focus:outline-none transition-all placeholder:text-slate-800"
+                >
+            </div>
+
+            <button onclick="calculate()" class="w-full bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-600 text-slate-900 text-3xl font-black py-8 rounded-2xl transition-all transform active:scale-95 shadow-[0_10px_20px_rgba(0,0,0,0.3)]">
+                คำนวณเลขมงคล
+            </button>
+        </div>
+
+        <!-- Results Display -->
+        <div id="resultArea" class="px-8 pb-12 hidden">
+            <div class="h-px bg-slate-700 mb-10"></div>
+            
+            <div id="stepsContainer" class="space-y-6 mb-12">
+                <!-- Steps appear here -->
+            </div>
+
+            <div id="finalScore" class="hidden">
+                <div class="relative p-1 rounded-[2.5rem] bg-gradient-to-r from-yellow-600 via-yellow-200 to-yellow-600">
+                    <div class="bg-slate-900 rounded-[2.3rem] p-10 text-center">
+                        <p class="text-2xl text-slate-400 mb-2">ผลรวมมงคลคือ</p>
+                        <div id="resultDigit" class="text-[10rem] font-black leading-none gold-text my-4 italic">?</div>
+                        <div class="h-1 w-32 bg-yellow-600 mx-auto mb-8"></div>
+                        <p id="resultDesc" class="text-2xl md:text-3xl text-slate-200 leading-relaxed font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Social Share -->
+                <div class="mt-12 flex flex-col gap-4">
+                    <p class="text-center text-slate-500 text-xl font-medium">บอกต่อความเป็นสิริมงคล</p>
+                    <div class="flex gap-4">
+                        <button onclick="shareFB()" class="flex-1 bg-[#1877F2] hover:bg-[#166fe5] text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center gap-3">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </button>
+                        <button onclick="shareLine()" class="flex-1 bg-[#06C755] hover:bg-[#05b34c] text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center gap-3">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19.365 9.863c.064.433.1.883.1 1.345 0 3.351-3.429 6.068-7.658 6.068-4.229 0-7.658-2.717-7.658-6.068s3.429-6.068 7.658-6.068c.813 0 1.589.1 2.304.285l-.048-.028c1.36-.54 2.618-1.037 3.513-1.258.118-.028.232-.054.341-.077.295-.062.532.148.473.43l-.337 1.574s-.27 1.259-.395 1.828c-.015.068-.027.13-.035.185l.048-.018zM9.3 12.784c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35V11.2h.5c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-1.1c-.193 0-.35.157-.35.35v1.584h-.5c-.193 0-.35.157-.35.35v1.1zm3.85 0c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35v-3.134c0-.193-.157-.35-.35-.35h-1.1c-.193 0-.35.157-.35.35v3.134zm3.85 0c0 .193.157.35.35.35h1.1c.193 0 .35-.157.35-.35v-1.584h1.1c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-2.2c-.193 0-.35.157-.35.35v3.134zm-9.35 0c0 .193.157.35.35.35h2.2c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-1.1v-.534h1.1c.193 0 .35-.157.35-.35v-1.1c0-.193-.157-.35-.35-.35h-2.2c-.193 0-.35.157-.35.35v3.134z"/></svg>
+                            LINE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credits -->
+        <div class="p-10 bg-slate-800/80 border-t border-slate-700 text-center">
+            <div class="flex flex-col gap-3">
+                <p class="text-slate-500 text-lg tracking-[0.3em] font-bold">ที่ปรึกษา</p>
+                <p class="text-yellow-500 text-2xl font-bold italic">อาจารย์โมเดล & อาจารย์ลิตา</p>
+                <div class="w-16 h-0.5 bg-slate-600 mx-auto my-2"></div>
+                <p class="text-slate-400 text-lg">พัฒนาโปรแกรมโดย <span class="text-white font-bold">คุณเก่ง</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const meanings = {
+            1: "บ้านแห่งผู้นำ มีความสำเร็จ เจริญก้าวหน้า มีเกียรติยศชื่อเสียง",
+            2: "บ้านแห่งความรัก ความเมตตา ผู้อยู่อาศัยมักมีความสุขทางใจ",
+            3: "บ้านแห่งความกระตือรือร้น กล้าหาญ มักมีโชคจากการแข่งขัน",
+            4: "บ้านแห่งสติปัญญา การสื่อสาร ค้าขายรุ่งเรือง เจรจาเป็นเลิศ",
+            5: "บ้านแห่งความมั่นคง มีคุณธรรม มีสิ่งศักดิ์สิทธิ์คุ้มครองเสมอ",
+            6: "บ้านแห่งศิลปะ ความสวยงาม และมีโชคลาภทางการเงินสม่ำเสมอ",
+            7: "บ้านแห่งความอดทน มักมีทรัพย์สินมรดก และความมั่นคงถาวร",
+            8: "บ้านแห่งความร่ำรวย มั่งคั่ง มีบารมี และมีโชคจากแดนไกล",
+            9: "บ้านแห่งความเป็นสิริมงคลสูงสุด เจริญก้าวหน้าและร่มเย็นเป็นสุข"
+        };
+
+        async function calculate() {
+            const input = document.getElementById('houseNumber').value.trim();
+            const container = document.getElementById('stepsContainer');
+            const resultArea = document.getElementById('resultArea');
+            const finalScore = document.getElementById('finalScore');
+            
+            if (!input) return;
+
+            // Reset UI
+            container.innerHTML = '';
+            resultArea.classList.remove('hidden');
+            finalScore.classList.add('hidden');
+
+            // Extraction Logic
+            let rawTarget = input.includes('/') ? input.split('/')[1] : input;
+            let currentStr = rawTarget.replace(/[^0-9]/g, '');
+
+            if (!currentStr) {
+                addStep("ไม่พบตัวเลขที่สามารถคำนวณได้", true);
+                return;
+            }
+
+            addStep(`วิเคราะห์เลข: <span class="text-yellow-400 font-bold">${currentStr}</span>`);
+            await sleep(600);
+
+            let currentSum = 0;
+            
+            while (true) {
+                let digits = currentStr.split('').map(Number);
+                currentSum = digits.reduce((a, b) => a + b, 0);
+                
+                let calculationText = digits.join(' + ');
+                addStep(`${calculationText} = <span class="text-yellow-400 font-bold">${currentSum}</span>`);
+                await sleep(800);
+
+                if (currentSum < 10) break;
+
+                addStep(`ยังไม่ใช่เลขหลักเดียว นำ <span class="text-white">${currentSum}</span> มาบวกต่อ...`);
+                currentStr = currentSum.toString();
+                await sleep(600);
+            }
+
+            // Final Display
+            document.getElementById('resultDigit').innerText = currentSum;
+            document.getElementById('resultDesc').innerText = meanings[currentSum] || "เป็นเลขที่มีพลังงานบวกมหาศาล";
+            
+            finalScore.classList.remove('hidden');
+            finalScore.classList.add('step-animation');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function addStep(html, isError = false) {
+            const div = document.createElement('div');
+            div.className = `step-animation text-2xl p-6 rounded-2xl border ${isError ? 'bg-red-900/20 border-red-800 text-red-400' : 'bg-slate-800/50 border-slate-700 text-slate-300'}`;
+            div.innerHTML = `✨ ${html}`;
+            document.getElementById('stepsContainer').appendChild(div);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // Share Functions
+        function shareFB() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("ฉันคำนวณเลขที่บ้านมงคลได้เลข " + document.getElementById('resultDigit').innerText);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+        }
+
+        function shareLine() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("ผลคำนวณเลขที่บ้านมงคลของฉันคือเลข " + document.getElementById('resultDigit').innerText);
+            window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${text}`, '_blank');
+        }
+
+        document.getElementById('houseNumber').addEventListener('keypress', e => {
+            if (e.key === 'Enter') calculate();
+        });
+    </script>
+</body>
+</html>
